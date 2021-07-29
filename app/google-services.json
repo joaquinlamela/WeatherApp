@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "170259545501",
+    "project_id": "ahorrouy-obligatorio-isp",
+    "storage_bucket": "ahorrouy-obligatorio-isp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170259545501:android:0653a0b6008964dc040374",
+        "android_client_info": {
+          "package_name": "com.ahorrouy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "170259545501-nfkahbtqqd7b3278di86dr3kf1nr156v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGyZQTx0ur_FO5DZC5u5f8660xiKHV9Qw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "170259545501-nfkahbtqqd7b3278di86dr3kf1nr156v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

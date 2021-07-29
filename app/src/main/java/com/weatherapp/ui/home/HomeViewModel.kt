@@ -1,13 +1,31 @@
 package com.weatherapp.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.weatherapp.repository.interfaces.IWeatherRepository
+import com.weatherapp.ui.home.model.SearchModel
+import kotlinx.coroutines.Dispatchers
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val weatherRepository: IWeatherRepository) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val weatherParams = MutableLiveData<SearchModel>()
+
+    fun setParameters(searchParameters: SearchModel) {
+        weatherParams.value = searchParameters
     }
-    val text: LiveData<String> = _text
+
+    val getWeather = weatherParams.switchMap { searchParameters ->
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(
+                weatherRepository.getWeather(searchParameters.lat, searchParameters.lon, searchParameters.apiKey)
+            )
+        }
+    }
+
+    /*
+
+    fun getWeather(lat: String, lon:String, apiKey:String)  {
+        liveData(Dispatchers.IO) {
+            emit(weatherRepository.getWeather(lat, lon, apiKey))
+        }
+    }*/
 }
