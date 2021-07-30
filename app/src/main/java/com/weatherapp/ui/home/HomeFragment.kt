@@ -1,16 +1,24 @@
 package com.weatherapp.ui.home
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
-import com.weatherapp.api.Constants.Companion.API_KEY
+import com.weatherapp.api.Constants
 import com.weatherapp.api.model.Weather
 import com.weatherapp.api.model.WeatherResponse
 import com.weatherapp.databinding.FragmentHomeBinding
+import com.weatherapp.ui.home.adapter.DailyWeatherAdapter
 import com.weatherapp.ui.home.model.SearchModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,14 +29,28 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeVM: HomeViewModel by activityViewModels()
+    private var lastKnownLocation: Location? = null
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var longitude: Float = -56.164993f
+    private var latitude: Float = -34.905895f
 
+
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val parameters: SearchModel = SearchModel("-34.905895", "-56.164993", API_KEY)
+        initRecyclerViewForDailyWeather()
+
+
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
+
+        getDeviceLocation()
+
+        val parameters = SearchModel(latitude.toString(), longitude.toString(), Constants.API_KEY)
         homeVM.setParameters(parameters)
 
         homeVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
@@ -45,6 +67,7 @@ class HomeFragment : Fragment() {
         setWeatherValues(response)
         setSunsetAndSunrise(response)
         setUpdateAt(response)
+        setUpRecyclerView(response)
     }
 
     private fun setTimeZone(response: WeatherResponse){
@@ -95,6 +118,38 @@ class HomeFragment : Fragment() {
             Date(updatedAt*1000)
         )
         binding.tvUpdatedAt.text = updatedAtText
+    }
+
+    private fun getDeviceLocation() {
+        try {
+            val locationResult = fusedLocationProviderClient.lastLocation
+            locationResult.addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    lastKnownLocation = task.result
+                    if (lastKnownLocation != null) {
+                        longitude = lastKnownLocation!!.longitude.toFloat()
+                        latitude = lastKnownLocation!!.latitude.toFloat()
+                    }
+                } else {
+                    Log.d(ContentValues.TAG, "Current location is null. Using defaults.")
+                    Log.e(ContentValues.TAG, "Exception: %s", task.exception)
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
+    }
+
+    private fun initRecyclerViewForDailyWeather() {
+        binding.rvDailyWeather.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+    }
+
+    private fun setUpRecyclerView(response: WeatherResponse){
+        binding.rvDailyWeather.adapter = DailyWeatherAdapter(response.daily)
     }
 
     override fun onDestroyView() {

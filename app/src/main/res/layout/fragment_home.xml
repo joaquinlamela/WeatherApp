@@ -175,7 +175,7 @@
             android:id="@+id/tv_updatedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="410dp"
+            android:layout_marginTop="460dp"
             android:layout_marginEnd="36dp"
             android:text="Updated at: "
             android:textColor="@color/white"
@@ -304,6 +304,15 @@
             app:layout_constraintEnd_toEndOf="@+id/backgroud_container__wind"
             app:layout_constraintStart_toStartOf="@+id/backgroud_container__wind"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDailyWeather"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_updatedAt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backgroud_container_pressure" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
