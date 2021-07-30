@@ -9,8 +9,9 @@ data class Daily(
     val dt: Long,
     val humidity: Int,
     val pressure: Int,
-    val sunrise: Int,
-    val sunset: Int,
+    val wind_speed: Double,
+    val sunrise: Long,
+    val sunset: Long,
     val temp: Temp,
     val weather: List<WeatherForDaily>
 ) : Parcelable

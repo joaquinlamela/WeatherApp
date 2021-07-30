@@ -9,8 +9,9 @@ data class Current(
     val dt: Long,
     val humidity: Int,
     val pressure: Int,
-    val sunrise: Int,
-    val sunset: Int,
+    val sunrise: Long,
+    val sunset: Long,
+    val wind_speed: Double,
     val temp: Double,
     val weather: List<Weather>
 ) : Parcelable
