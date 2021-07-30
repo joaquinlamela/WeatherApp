@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.gson.JsonElement
+import com.squareup.picasso.Picasso
 import com.weatherapp.api.Constants.Companion.API_KEY
+import com.weatherapp.api.model.WeatherResponse
 import com.weatherapp.databinding.FragmentHomeBinding
 import com.weatherapp.ui.home.model.SearchModel
-import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -37,28 +37,27 @@ class HomeFragment : Fragment() {
 
         homeVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
             if(response.isSuccessful){
-                getJsonFormat(response.body(), view)
+                visualizeResponse(response.body(), view)
             }
         })
     }
 
-    private fun getJsonFormat(response: JsonElement?, view: View){
-        val jsonObj = JSONObject(response.toString())
-        val timeZone = jsonObj.getString("timezone").split("/").toTypedArray()
-        binding.tvLocation.text = timeZone[1]
-        val current = jsonObj.getJSONObject("current")
-        val weather = current.getJSONArray("weather").getJSONObject(0)
-        val descriptionMain = weather.getString("description")
-        binding.tvStatus.text= descriptionMain
-        val temp = (current.getDouble("temp") - 273.15).roundToInt()
+    private fun visualizeResponse(response: WeatherResponse?, view: View){
+        val timeZoneSplitted = response!!.timezone.split("/").toTypedArray()
+        binding.tvLocation.text = timeZoneSplitted[1]
+        val weather = response.current.weather[0]
+        var descriptionOfStatus = weather.description
+        descriptionOfStatus = descriptionOfStatus.substring(0,1).uppercase() + descriptionOfStatus.substring(1).lowercase()
+        binding.tvStatus.text= descriptionOfStatus
+        val temp = (response.current.temp - 273.15).roundToInt()
         binding.tvTemp.text = temp.toString() + "°C"
+        var iconUrl =  "https://openweathermap.org/img/w/" + weather.icon+ ".png";
+        Picasso.get().load(iconUrl).into(binding.imgActualWeather)
 
-
-        val updatedAt:Long = current.getLong("dt")
+        val updatedAt: Long = response.current.dt
         val updatedAtText = "Updated at: " + SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(
             Date(updatedAt*1000)
         )
-
         binding.tvUpdatedAt.text = updatedAtText
 
     }

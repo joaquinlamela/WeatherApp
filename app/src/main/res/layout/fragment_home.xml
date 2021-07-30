@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="80dp"
             android:layout_marginEnd="12dp"
             android:lineSpacingExtra="4dp"
             android:text="Clouds"
@@ -68,8 +68,8 @@
 
         <ImageView
             android:id="@+id/img_sunrise"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginTop="38dp"
             android:layout_marginEnd="280dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,14 +92,14 @@
 
         <ImageView
             android:id="@+id/img_sunset"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginTop="38dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_temp"
             app:srcCompat="@drawable/ic_sunset"
-            app:tint="@color/white"/>
+            app:tint="@color/white" />
 
 
         <ImageView
@@ -116,8 +116,8 @@
 
         <ImageView
             android:id="@+id/img_humidity"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="280dp"
             android:layout_marginTop="38dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -140,8 +140,8 @@
 
         <ImageView
             android:id="@+id/img_wind"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="140dp"
             android:layout_marginTop="160dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -164,8 +164,8 @@
 
         <ImageView
             android:id="@+id/img_pressure"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginTop="160dp"
             android:layout_marginEnd="140dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -188,96 +188,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_temp" />
 
+        <ImageView
+            android:id="@+id/img_actualWeather"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 
-
-
-
-
-
-
-
-
-
-
-        <!--
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Location"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
-
-
-        <TextView
-                android:id="@+id/updated_at"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Updated at"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-
-
-        <LinearLayout
-            android:id="@+id/overviewContainer"
-            android:orientation="vertical"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Clear Sky"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-
-            <TextView
-                android:id="@+id/temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-thin"
-                android:text="24°C"
-                android:textColor="@color/white"
-                android:textSize="90sp" />
-
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/temp_min"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min temp"
-                    android:textColor="@color/white" />
-
-                <Space
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content">
-                </Space>
-
-                <TextView
-                    android:id="@+id/temp_max"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Max temp"
-                    android:textColor="@color/white" />
-                
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
--->

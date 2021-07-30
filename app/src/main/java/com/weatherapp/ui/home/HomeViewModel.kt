@@ -20,12 +20,4 @@ class HomeViewModel(private val weatherRepository: IWeatherRepository) : ViewMod
             )
         }
     }
-
-    /*
-
-    fun getWeather(lat: String, lon:String, apiKey:String)  {
-        liveData(Dispatchers.IO) {
-            emit(weatherRepository.getWeather(lat, lon, apiKey))
-        }
-    }*/
 }
