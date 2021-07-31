@@ -1,13 +1,16 @@
 package com.weatherapp.ui.map
 
+import android.content.ContentValues
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -38,11 +41,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(requireContext())
         val mMapFragment = SupportMapFragment.newInstance()
         childFragmentManager.beginTransaction().add(R.id.map, mMapFragment).commit()
+        mMapFragment.view?.isClickable = true
         mMapFragment.getMapAsync(this)
-
-
-
-
 
         return binding.root
     }
@@ -52,7 +52,54 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 
-    override fun onMapReady(p0: GoogleMap) {
-        TODO("Not yet implemented")
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        updateLocationUI()
+        getDeviceLocation()
+    }
+
+    private fun updateLocationUI() {
+        if (map == null) {
+            return
+        }
+        try {
+            map?.isMyLocationEnabled = true
+            map?.uiSettings?.isMyLocationButtonEnabled = true
+        } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
+    }
+
+    private fun getDeviceLocation() {
+        try {
+            val locationResult = fusedLocationProviderClient.lastLocation
+            locationResult.addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    lastKnownLocation = task.result
+                    if (lastKnownLocation != null) {
+                        map?.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(
+                                    lastKnownLocation!!.latitude,
+                                    lastKnownLocation!!.longitude
+                                ), DEFAULT_ZOOM.toFloat()
+                            )
+                        )
+                        longitude = lastKnownLocation!!.longitude.toFloat()
+                        latitude = lastKnownLocation!!.latitude.toFloat()
+                    }
+                } else {
+                    Log.d(ContentValues.TAG, "Current location is null. Using defaults.")
+                    Log.e(ContentValues.TAG, "Exception: %s", task.exception)
+                    map?.moveCamera(
+                        CameraUpdateFactory
+                            .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat())
+                    )
+                    map?.uiSettings?.isMyLocationButtonEnabled = false
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
     }
 }

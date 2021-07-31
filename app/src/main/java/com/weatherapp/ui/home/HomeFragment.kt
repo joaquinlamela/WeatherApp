@@ -1,6 +1,5 @@
 package com.weatherapp.ui.home
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.location.Location
 import android.os.Bundle
@@ -35,7 +34,6 @@ class HomeFragment : Fragment() {
     private var latitude: Float = -34.905895f
 
 
-    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,7 +41,6 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         initRecyclerViewForDailyWeather()
-
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
