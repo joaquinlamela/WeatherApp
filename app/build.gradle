@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
     id 'com.google.secrets_gradle_plugin' version '0.5'
 
 }
@@ -19,6 +20,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue "string", "google_maps_key", "AIzaSyANBuc2d7Czwd4ubfbfr5AlDQkiUkS7OmU"
+
     }
 
     buildTypes {

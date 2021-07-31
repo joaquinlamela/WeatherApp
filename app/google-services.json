@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "170259545501",
-    "project_id": "ahorrouy-obligatorio-isp",
-    "storage_bucket": "ahorrouy-obligatorio-isp.appspot.com"
+    "project_number": "692137886455",
+    "project_id": "weatherapp-31e08",
+    "storage_bucket": "weatherapp-31e08.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:170259545501:android:0653a0b6008964dc040374",
+        "mobilesdk_app_id": "1:692137886455:android:f493778756090da3ecc9f2",
         "android_client_info": {
-          "package_name": "com.ahorrouy"
+          "package_name": "com.weatherapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "170259545501-nfkahbtqqd7b3278di86dr3kf1nr156v.apps.googleusercontent.com",
+          "client_id": "692137886455-bjvv9bujkpq3a1f76ej8bfn2h7lp0bki.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBGyZQTx0ur_FO5DZC5u5f8660xiKHV9Qw"
+          "current_key": "AIzaSyDe8SEJriDfZ7n_5-ncJkM5xG_2CHpW9m0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "170259545501-nfkahbtqqd7b3278di86dr3kf1nr156v.apps.googleusercontent.com",
+              "client_id": "692137886455-bjvv9bujkpq3a1f76ej8bfn2h7lp0bki.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
