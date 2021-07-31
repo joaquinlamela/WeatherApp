@@ -12,11 +12,15 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.weatherapp.R
 import com.weatherapp.databinding.FragmentMapBinding
+
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -29,7 +33,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val defaultLocation = LatLng(-34.905895, -56.164993)
     private var longitude: Float = -56.164993f
     private var latitude: Float = -34.905895f
-
+    private var marker: Marker? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +60,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         updateLocationUI()
         getDeviceLocation()
+
+        map!!.setOnMapLongClickListener(OnMapLongClickListener { latLng ->
+
+
+
+
+            if (marker == null) {
+                marker = map!!.addMarker(
+                    MarkerOptions()
+                        .position(latLng)
+                        .title("Your marker title")
+                        .snippet("Your marker snippet")
+                )
+            } else {
+                marker!!.setPosition(latLng)
+            }
+        })
     }
 
     private fun updateLocationUI() {
