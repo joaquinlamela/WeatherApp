@@ -1,13 +1,27 @@
 package com.weatherapp.ui.map
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.weatherapp.repository.interfaces.IWeatherRepository
+import com.weatherapp.ui.home.model.SearchModel
+import kotlinx.coroutines.Dispatchers
 
-class MapViewModel : ViewModel() {
+class MapViewModel(private val weatherRepository: IWeatherRepository) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is map Fragment"
+    private val weatherParams = MutableLiveData<SearchModel>()
+
+    fun setParameters(searchParameters: SearchModel) {
+        weatherParams.value = searchParameters
     }
-    val text: LiveData<String> = _text
+
+    val getWeather = weatherParams.switchMap { searchParameters ->
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(
+                weatherRepository.getWeatherForSpecificMarker(
+                    searchParameters.lat,
+                    searchParameters.lon,
+                    searchParameters.apiKey
+                )
+            )
+        }
+    }
 }

@@ -15,11 +15,14 @@ import com.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.repository.implementation.WeatherRepository
 import com.weatherapp.ui.home.HomeViewModel
 import com.weatherapp.ui.home.HomeViewModelFactory
+import com.weatherapp.ui.map.MapViewModel
+import com.weatherapp.ui.map.MapViewModelFactory
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var homeVM: HomeViewModel
+    private lateinit var mapVM: MapViewModel
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +35,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         homeVM =
             ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
 
+
+        val mapViewModelFactory = MapViewModelFactory(
+            WeatherRepository()
+        )
+
+        mapVM =
+            ViewModelProvider(this, mapViewModelFactory).get(MapViewModel::class.java)
 
         if(hasLocationPermission()){
             goToHome()
