@@ -23,6 +23,4 @@ interface ActualWeatherWebService {
         @Query("exclude") exclude: String,
         @Query("appid") appiid: String
     ): Response<WeatherResponseForMarker>
-
-
 }

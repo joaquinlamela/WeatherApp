@@ -12,7 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class DailyWeatherAdapter(val dailyWeatherList: List<Daily>): GenericAdapter<Daily>(dailyWeatherList){
+class DailyWeatherAdapter(val dailyWeatherList: List<Daily>) :
+    GenericAdapter<Daily>(dailyWeatherList) {
 
     inner class DailyWeatherHolder(val view: View) : BaseViewHolder<Daily>(view) {
         var iconWeather: ImageView = view.findViewById(R.id.img_IconWeather)
@@ -27,12 +28,12 @@ class DailyWeatherAdapter(val dailyWeatherList: List<Daily>): GenericAdapter<Dai
 
             val updatedAt: Long = daily.dt
             val updatedAtText = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(
-                Date(updatedAt*1000)
+                Date(updatedAt * 1000)
             )
             tvDate.text = updatedAtText
 
             val tempMin = (daily.temp.min - 273.15).roundToInt()
-            tv_MinTemp.text =  tempMin.toString() + "°C"
+            tv_MinTemp.text = tempMin.toString() + "°C"
 
             val tempMax = (daily.temp.max - 273.15).roundToInt()
             tv_MaxTemp.text = tempMax.toString() + "°C"
@@ -41,6 +42,12 @@ class DailyWeatherAdapter(val dailyWeatherList: List<Daily>): GenericAdapter<Dai
 
     override fun setViewHolder(parent: ViewGroup): BaseViewHolder<Daily> {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return DailyWeatherHolder(layoutInflater.inflate(R.layout.item_daily_weather, parent, false))
+        return DailyWeatherHolder(
+            layoutInflater.inflate(
+                R.layout.item_daily_weather,
+                parent,
+                false
+            )
+        )
     }
 }

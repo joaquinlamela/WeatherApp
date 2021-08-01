@@ -16,7 +16,11 @@ class HomeViewModel(private val weatherRepository: IWeatherRepository) : ViewMod
     val getWeather = weatherParams.switchMap { searchParameters ->
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(
-                weatherRepository.getWeather(searchParameters.lat, searchParameters.lon, searchParameters.apiKey)
+                weatherRepository.getWeather(
+                    searchParameters.lat,
+                    searchParameters.lon,
+                    searchParameters.apiKey
+                )
             )
         }
     }

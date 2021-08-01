@@ -36,7 +36,6 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,17 +47,17 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
-        if(hasLocationPermission()){
+        if (hasLocationPermission()) {
             getDeviceLocation()
 
-        }else{
+        } else {
             requestLocationPermission()
         }
 
         return binding.root
     }
 
-    private fun visualizeResponse(response: WeatherResponse?){
+    private fun visualizeResponse(response: WeatherResponse?) {
         setTimeZone(response!!)
         setWeather(response.current.weather[0])
         setWeatherValues(response)
@@ -67,21 +66,23 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         setUpRecyclerView(response)
     }
 
-    private fun setTimeZone(response: WeatherResponse){
+    private fun setTimeZone(response: WeatherResponse) {
         val timeZoneSplitted = response.timezone.split("/").toTypedArray()
         binding.tvLocation.text = timeZoneSplitted[1]
     }
 
-    private fun setWeather(weather: Weather){
+    private fun setWeather(weather: Weather) {
         var descriptionOfStatus = weather.description
-        descriptionOfStatus = descriptionOfStatus.substring(0,1).uppercase() + descriptionOfStatus.substring(1).lowercase()
-        binding.tvStatus.text= descriptionOfStatus
+        descriptionOfStatus =
+            descriptionOfStatus.substring(0, 1).uppercase() + descriptionOfStatus.substring(1)
+                .lowercase()
+        binding.tvStatus.text = descriptionOfStatus
 
-        var iconUrl =  "https://openweathermap.org/img/w/" + weather.icon+ ".png";
+        var iconUrl = "https://openweathermap.org/img/w/" + weather.icon + ".png";
         Picasso.get().load(iconUrl).into(binding.imgActualWeather)
     }
 
-    private fun setWeatherValues(response: WeatherResponse){
+    private fun setWeatherValues(response: WeatherResponse) {
         val temp = (response.current.temp - 273.15).roundToInt()
         binding.tvTemp.text = temp.toString() + "°C"
 
@@ -95,7 +96,7 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.tvWind.text = wind
     }
 
-    private fun setSunsetAndSunrise(response: WeatherResponse){
+    private fun setSunsetAndSunrise(response: WeatherResponse) {
         val calendar = Calendar.getInstance()
 
         calendar.time = Date(response.current.sunrise * 1000)
@@ -103,16 +104,16 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val sunrise = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunrise.text = sunrise
 
-        calendar.time = Date(response.current.sunset * 1000 )
+        calendar.time = Date(response.current.sunset * 1000)
         calendar.add(Calendar.HOUR, -3)
         val sunset = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunset.text = sunset
     }
 
-    private fun setUpdateAt(response: WeatherResponse){
+    private fun setUpdateAt(response: WeatherResponse) {
         val updatedAt: Long = response.current.dt
         val updatedAtText = SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH).format(
-            Date(updatedAt*1000)
+            Date(updatedAt * 1000)
         )
         binding.tvUpdatedAt.text = updatedAtText
     }
@@ -144,7 +145,7 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         )
     }
 
-    private fun setUpRecyclerView(response: WeatherResponse){
+    private fun setUpRecyclerView(response: WeatherResponse) {
         binding.rvDailyWeather.adapter = DailyWeatherAdapter(response.daily)
     }
 
@@ -188,12 +189,12 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun getWeatherCall(latitude: Double, longitude: Double){
+    private fun getWeatherCall(latitude: Double, longitude: Double) {
         val parameters = SearchModel(latitude.toString(), longitude.toString(), Constants.API_KEY)
         homeVM.setParameters(parameters)
 
         homeVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 visualizeResponse(response.body())
             }
         })

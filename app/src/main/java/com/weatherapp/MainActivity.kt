@@ -27,21 +27,15 @@ class MainActivity : AppCompatActivity() {
         val homeViewModelFactory = HomeViewModelFactory(
             WeatherRepository()
         )
-
         homeVM =
             ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-
-
         val mapViewModelFactory = MapViewModelFactory(
             WeatherRepository()
         )
-
         mapVM =
             ViewModelProvider(this, mapViewModelFactory).get(MapViewModel::class.java)
-
         goToHome()
     }
-
 
     private fun goToHome() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -58,5 +52,4 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
-
 }

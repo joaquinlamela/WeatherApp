@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentMapBinding? = null
@@ -44,8 +43,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var latitude: Float = -34.905895f
     private var marker: Marker? = null
     private val mapVM: MapViewModel by activityViewModels()
-    private lateinit var responseForMarker: WeatherResponseForMarker
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +56,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         childFragmentManager.beginTransaction().add(R.id.map, mMapFragment).commit()
         mMapFragment.view?.isClickable = true
         mMapFragment.getMapAsync(this)
-        getWeatherForMarker(defaultLocation.latitude.toString(), defaultLocation.longitude.toString())
+        getWeatherForMarker(
+            defaultLocation.latitude.toString(),
+            defaultLocation.longitude.toString()
+        )
         return binding.root
     }
 
@@ -72,36 +72,31 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         updateLocationUI()
         getDeviceLocation()
-
+        marker = map!!.addMarker(
+            MarkerOptions()
+                .position(defaultLocation)
+        )
         map!!.setOnMapLongClickListener(OnMapLongClickListener { latLng ->
             val latitude = latLng.latitude.toString()
             val longitude = latLng.longitude.toString()
-
             getWeatherForMarker(latitude, longitude)
-
-            if (marker == null) {
-                marker = map!!.addMarker(
-                    MarkerOptions()
-                        .position(latLng)
-                )
-            } else {
-                marker!!.position = latLng
-            }
+            marker!!.position = latLng
         })
     }
 
-    private fun getWeatherForMarker(lat: String, lon: String){
+
+    private fun getWeatherForMarker(lat: String, lon: String) {
         val parameters = SearchModel(lat, lon, Constants.API_KEY)
         mapVM.setParameters(parameters)
 
         mapVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 visualizeResponse(response.body()!!)
             }
         })
     }
 
-    private fun visualizeResponse(response: WeatherResponseForMarker?){
+    private fun visualizeResponse(response: WeatherResponseForMarker?) {
         setTimeZone(response!!)
         setWeather(response.current.weather[0])
         setWeatherValues(response)
@@ -109,7 +104,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpdateAt(response)
     }
 
-    private fun setTimeZone(response: WeatherResponseForMarker){
+    private fun setTimeZone(response: WeatherResponseForMarker) {
         val timeZoneSplitted = response.timezone.split("/").toTypedArray()
         binding.tvTimeZone.text = timeZoneSplitted[1]
     }
@@ -119,34 +114,37 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.tvTempForLocation.text = temp.toString() + "°C"
     }
 
-    private fun setSunsetAndSunrise(response: WeatherResponseForMarker){
+    private fun setSunsetAndSunrise(response: WeatherResponseForMarker) {
         val calendar = Calendar.getInstance()
 
         calendar.time = Date(response.current.sunrise * 1000)
         calendar.add(Calendar.HOUR, -3)
-        val sunrise = "Sunrise: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
+        val sunrise =
+            "Sunrise: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunriseForLocation.text = sunrise
 
-        calendar.time = Date(response.current.sunset * 1000 )
+        calendar.time = Date(response.current.sunset * 1000)
         calendar.add(Calendar.HOUR, -3)
         val sunset = "Sunset: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunsetForLocation.text = sunset
     }
 
-    private fun setUpdateAt(response: WeatherResponseForMarker){
+    private fun setUpdateAt(response: WeatherResponseForMarker) {
         val updatedAt: Long = response.current.dt
         val updatedAtText = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(
-            Date(updatedAt*1000)
+            Date(updatedAt * 1000)
         )
         binding.tvDateForLocation.text = updatedAtText
     }
 
-    private fun setWeather(weather: Weather){
+    private fun setWeather(weather: Weather) {
         var descriptionOfStatus = weather.description
-        descriptionOfStatus = descriptionOfStatus.substring(0,1).uppercase() + descriptionOfStatus.substring(1).lowercase()
-        binding.tvStatusForLocation.text= descriptionOfStatus
+        descriptionOfStatus =
+            descriptionOfStatus.substring(0, 1).uppercase() + descriptionOfStatus.substring(1)
+                .lowercase()
+        binding.tvStatusForLocation.text = descriptionOfStatus
 
-        var iconUrl =  "https://openweathermap.org/img/w/" + weather.icon+ ".png";
+        var iconUrl = "https://openweathermap.org/img/w/" + weather.icon + ".png";
         Picasso.get().load(iconUrl).into(binding.ivIconForLocation)
     }
 

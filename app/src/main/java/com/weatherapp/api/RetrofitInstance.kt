@@ -17,5 +17,4 @@ object RetrofitInstance {
     val weatherEnpoint: ActualWeatherWebService by lazy {
         retrofit.create(ActualWeatherWebService::class.java)
     }
-
 }

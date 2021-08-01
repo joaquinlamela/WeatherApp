@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.weatherapp.repository.interfaces.IWeatherRepository
 
 class HomeViewModelFactory(
-private val weatherRepository: IWeatherRepository
+    private val weatherRepository: IWeatherRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
