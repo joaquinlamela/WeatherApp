@@ -111,7 +111,7 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setUpdateAt(response: WeatherResponse){
         val updatedAt: Long = response.current.dt
-        val updatedAtText = "Updated at: " + SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(
+        val updatedAtText = SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH).format(
             Date(updatedAt*1000)
         )
         binding.tvUpdatedAt.text = updatedAtText
