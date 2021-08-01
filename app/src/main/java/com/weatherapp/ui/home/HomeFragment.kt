@@ -1,5 +1,6 @@
 package com.weatherapp.ui.home
 
+import android.Manifest
 import android.content.ContentValues
 import android.location.Location
 import android.os.Bundle
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
+import com.vmadalin.easypermissions.EasyPermissions
+import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.weatherapp.api.Constants
 import com.weatherapp.api.model.Weather
 import com.weatherapp.api.model.WeatherResponse
@@ -23,15 +26,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
+    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeVM: HomeViewModel by activityViewModels()
     private var lastKnownLocation: Location? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var longitude: Float = -56.164993f
-    private var latitude: Float = -34.905895f
+
 
 
     override fun onCreateView(
@@ -45,16 +48,13 @@ class HomeFragment : Fragment() {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
-        getDeviceLocation()
+        if(hasLocationPermission()){
+            getDeviceLocation()
 
-        val parameters = SearchModel(latitude.toString(), longitude.toString(), Constants.API_KEY)
-        homeVM.setParameters(parameters)
+        }else{
+            requestLocationPermission()
+        }
 
-        homeVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
-            if(response.isSuccessful){
-                visualizeResponse(response.body())
-            }
-        })
         return binding.root
     }
 
@@ -124,8 +124,7 @@ class HomeFragment : Fragment() {
                 if (task.isSuccessful) {
                     lastKnownLocation = task.result
                     if (lastKnownLocation != null) {
-                        longitude = lastKnownLocation!!.longitude.toFloat()
-                        latitude = lastKnownLocation!!.latitude.toFloat()
+                        getWeatherCall(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
                     }
                 } else {
                     Log.d(ContentValues.TAG, "Current location is null. Using defaults.")
@@ -147,6 +146,57 @@ class HomeFragment : Fragment() {
 
     private fun setUpRecyclerView(response: WeatherResponse){
         binding.rvDailyWeather.adapter = DailyWeatherAdapter(response.daily)
+    }
+
+    private fun hasLocationPermission() = EasyPermissions.hasPermissions(
+        requireContext(),
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    private fun requestLocationPermission() {
+        EasyPermissions.requestPermissions(
+            this,
+            "This app need to get your location",
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+                if (perms.isNotEmpty()) {
+                    getDeviceLocation()
+                }
+            }
+        }
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            SettingsDialog.Builder(requireContext()).build().show()
+        } else {
+            requestLocationPermission()
+        }
+    }
+
+    private fun getWeatherCall(latitude: Double, longitude: Double){
+        val parameters = SearchModel(latitude.toString(), longitude.toString(), Constants.API_KEY)
+        homeVM.setParameters(parameters)
+
+        homeVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
+            if(response.isSuccessful){
+                visualizeResponse(response.body())
+            }
+        })
     }
 
     override fun onDestroyView() {
