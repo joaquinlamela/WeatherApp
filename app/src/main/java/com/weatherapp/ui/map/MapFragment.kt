@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -91,6 +92,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapVM.getWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer { response ->
             if (response.isSuccessful) {
                 visualizeResponse(response.body()!!)
+            }else{
+                Toast.makeText(
+                    context,
+                    "An error has occurred while trying to get the time for the selected marker.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }
