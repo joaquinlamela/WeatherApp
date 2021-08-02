@@ -84,7 +84,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-
     private fun getWeatherForMarker(lat: String, lon: String) {
         val parameters = SearchModel(lat, lon, Constants.API_KEY)
         mapVM.setParameters(parameters)
@@ -120,18 +119,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         calendar.time = Date(response.current.sunrise * 1000)
         calendar.add(Calendar.HOUR, -3)
         val sunrise =
-            "Sunrise: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
+            SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunriseForLocation.text = sunrise
 
         calendar.time = Date(response.current.sunset * 1000)
         calendar.add(Calendar.HOUR, -3)
-        val sunset = "Sunset: " + SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
+        val sunset = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(calendar.time)
         binding.tvSunsetForLocation.text = sunset
     }
 
     private fun setUpdateAt(response: WeatherResponseForMarker) {
         val updatedAt: Long = response.current.dt
-        val updatedAtText = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(
+        val updatedAtText = SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH).format(
             Date(updatedAt * 1000)
         )
         binding.tvDateForLocation.text = updatedAtText
